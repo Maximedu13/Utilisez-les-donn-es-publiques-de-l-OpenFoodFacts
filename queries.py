@@ -1,13 +1,15 @@
-import pymysql
+query_create_all_categories = ('INSERT INTO category(iD, name, url) \
+VALUES(1, "Boissons à l\'avoine", "https://fr.openfoodfacts.org/categorie/boissons-a-l-avoine.json"), \
+(2, "Guacamoles", "https://fr.openfoodfacts.org/categorie/guacamoles.json"), \
+(3, "Chips de Mais", "https://fr.openfoodfacts.org/categorie/chips-de-mais.json"), \
+(4, "Pommes noisettes", "https://fr.openfoodfacts.org/categorie/pommes-noisettes.json")\
+WHERE NOT EXISTS (SELECT * FROM category)')
 
 
-query_create_the_categories = 1
+query_display_all_categories = ("SELECT iD, name FROM category")
 
 
 
-query_create_all_categories = 1
+query_display_all_products = ("SELECT iD, name FROM product INNER JOIN category ON product.category = category.name")
 
-query_select_all_categories = ("SELECT name FROM categories")
-
-
-query_select_all_products = ("SELECT name FROM products")
+query_display_product_details = ("SELECT iD, name, description FROM product")
