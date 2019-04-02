@@ -1,17 +1,17 @@
 import pymysql
-import mysql.connector
 
 class connection():
     def __init__(self):
         self.cnx = None
         self.cursor = None
+        self.cur = None
         self.config = { 'host':'localhost',
                                 'user':'root',
                                 'password':'root',
                                 'port': 8889,
                                 'charset':'utf8'}
 
-    def executeScriptsFromFile(self, cursor, filename):
+    def execute_Scripts_From_File(self, cursor, filename):
         # Open and read the file as a single buffer
         fd = open(filename, 'r')
         sqlFile = fd.read()
@@ -38,6 +38,6 @@ class connection():
             print("No database found, the system is creating a new one...")
             self.cnx = pymysql.connect(**self.config)
             self.cur = self.cnx.cursor()
-            self.executeScriptsFromFile(self.cur, "create_bdd.sql")   
+            self.execute_Scripts_From_File(self.cur, "create_bdd.sql")
 
     #https://fr.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=nutella&sort_by=unique_scans_n&page_size=10&axis_x=energy&axis_y=products_n&action=display&json=1
