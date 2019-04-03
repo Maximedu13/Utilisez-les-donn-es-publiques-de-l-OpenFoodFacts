@@ -39,5 +39,3 @@ class connection():
             self.cnx = pymysql.connect(**self.config)
             self.cur = self.cnx.cursor()
             self.execute_Scripts_From_File(self.cur, "create_bdd.sql")
-
-    #https://fr.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=nutella&sort_by=unique_scans_n&page_size=10&axis_x=energy&axis_y=products_n&action=display&json=1

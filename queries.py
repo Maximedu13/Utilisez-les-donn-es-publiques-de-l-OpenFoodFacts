@@ -2,7 +2,11 @@ from classes import *
 
 query_reset = "DELETE FROM category"
 
-query_fill_bdd = ("INSERT INTO category(iD, name, url) VALUES(1, 'Boissons à l‘avoine', 'https://fr.openfoodfacts.org/categorie/boissons-a-l-avoine.json'), (2, 'Guacamoles', 'https://fr.openfoodfacts.org/categorie/guacamoles.json'), (3, 'Chips de Mais', 'https://fr.openfoodfacts.org/categorie/chips-de-mais.json'), (4, 'Pommes noisettes', 'https://fr.openfoodfacts.org/categorie/pommes-noisettes.json')")
+query_fill_bdd = "INSERT INTO category(iD, name, url) \
+VALUES(1, 'Boissons à l‘avoine', 'https://fr.openfoodfacts.org/categorie/boissons-a-l-avoine.json'), \
+    (2, 'Guacamoles', 'https://fr.openfoodfacts.org/categorie/guacamoles.json'), \
+    (3, 'Chips de Mais', 'https://fr.openfoodfacts.org/categorie/chips-de-mais.json'), \
+    (4, 'Pommes noisettes', 'https://fr.openfoodfacts.org/categorie/pommes-noisettes.json')"
 
 query_display_all_categories = ('SELECT iD, name FROM category')
 
@@ -12,6 +16,8 @@ query_display_all_products = "SELECT * FROM product INNER JOIN category ON produ
 
 query_display_product_details = "SELECT * FROM product WHERE id=2"
 
-find_a_substitute = "SELECT * FROM product WHERE nutri_score='a'"
+find_a_substitute = "SELECT * FROM product WHERE nutri_score='a' ORDER BY RAND () LIMIT 1"
+
+insert_a_substitute = ""
 
 find_food_substituted = "SELECT * FROM favourite"

@@ -28,8 +28,7 @@ class Base_action():
         for row in self.mysql.cur:
             print('{0} - {1} - {2}'.format(row[0], row[1], row[2]))
 
-    def get_product_details(self):
-        self.mysql.cur.execute(query_display_product_details)
+    def display_details(self):
         for row in self.mysql.cur:
             print(('Nom : {0}' + "\n"
                   'Marque : {1}' + "\n"
@@ -44,6 +43,14 @@ class Base_action():
                   'Image : {10}' + "\n"
                   'Catégorie : {11}').format(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12]))
 
+    def get_product_details(self):
+        self.mysql.cur.execute(query_display_product_details)
+        self.display_details()
+    
+    def display_substitutes(self):
+        self.mysql.cur.execute(find_a_substitute)
+        self.display_details()
+        
     def replace_characters(self):
         for product in self.list_products:
             product = product.replace(' ', "-")
@@ -54,14 +61,9 @@ class Base_action():
             self.list_ch.append(product)
 
     def insert_products(self):
-        #r = requests.get("https://fr.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=%22%20+%20pommes-noisettes%20+%20%22&sort_by=unique_scans_n&page_size=1000&axis_x=energy&axis_y=products_n&action=display&json=1")  
         self.replace_characters()
-        print(self.list_ch)
-        #for item in self.list_ch:
         r = requests.get("https://fr.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=" + self.list_ch[choice_second_level - 1] + "&sort_by=unique_scans_n&page_size=1000&axis_x=energy&axis_y=products_n&action=display&json=1")
-
         result = json.loads(r.text)
-
         for i in range(len(result["products"])):
             self.iD = i + 1
             try :
@@ -79,8 +81,6 @@ class Base_action():
                 self.name = result["products"][i]["product_name_fr"]
                 self.description = result["products"][i]["generic_name"]
                 self.url_image = result["products"][i]["image_small_url"]
-                #print(str(i + 1) + " - " + result["products"][i]["product_name"] + " - " + result["products"][i]["brands"])
-                #sys.exit()
                 val = (
                 self.iD, self.name, self.brand, self.nutri_score, self.calories, self.sugars, self.salts, self.lipids,
                 self.proteins, self.description, self.location_available, self.url_image, self.category_id)
@@ -91,7 +91,6 @@ class Base_action():
                                                      f13="category_id"), val)
                 self.mysql.cnx.commit()
             except:
-                #print(result["products"][0])
                 pass
 
 class Menu():
@@ -133,11 +132,21 @@ class Menu():
     def first_choice_fourth_level(self):
         choice_fourth_level = str(input('Souhaitez-vous trouver un substitut plus sain au produit ?'))
         if choice_fourth_level == "oui" or choice_fourth_level == "OUI":
-            print("ok j ai pige")
+            print("Voici ci-dessous un substitut plus sain au produit précédent 🍎")
+            self.action.display_substitutes()
+            self.first_choice_fifth_level()
         elif choice_fourth_level == "non" or choice_fourth_level == "NON":
             self.display_first_level()
         else:
             self.first_choice_fourth_level()
+
+    def first_choice_fifth_level(self):
+        choice_fifth_level = str(input('Souhaitez-vous enregistrer ce substitut dans la base de données ?'))
+        if choice_fifth_level == "oui" or choice_fifth_level == "OUI":
+            print("ok")
+        else:
+            print("Tant pis 🍔. Retour au menu principal.")
+            self.display_first_level()
 
     def display_first_level(self):
         # FIRST WE NEED TO VERIFIY WHAT THE USER WANTS
@@ -146,10 +155,3 @@ class Menu():
         print('1 - Quel aliment souhaitez-vous remplacer ?')
         print('2 - Retrouver mes aliments substitués.')
         self.first_choice_first_level()
-
-    # action.get_product_details()
-    # Base_action.get_product_details(3017620429484, 3017620429484)
-    # Base_action.get_product_details(7613033150395, 7613033150395)
-
-
-        #requests.get("https://fr.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=" + category["name"] + "&sort_by=unique_scans_n&page_size=1000&axis_x=energy&axis_y=products_n&action=display&json=1"
