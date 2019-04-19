@@ -1,1 +1,0 @@
-Open_Food_Facts_URL = "https://fr.openfoodfacts.org/"
